@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 60px; /* If you have a fixed navbar */
+    box-sizing: border-box;
+  }
+  
+  .card-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .flashcard-container {
+    width: 400px;
+    height: 250px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .flashcard-container:hover {
+    transform: scale(1.02);
+  }
+  
+  .arrow {
+    font-size: 2rem;
+    color: #333;
+    background-color: rgba(0,0,0,0.05);
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+  }
+  
+  .arrow:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+  
