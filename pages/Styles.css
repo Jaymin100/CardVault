@@ -17,7 +17,20 @@ body {
     justify-content: center;
     gap: 20px;
   }
-  
+
+  .create-bar-container {
+    background: #c9cabd;
+    display: flex;
+    align-items: center;
+    width: 200px;
+    height: 1000px;
+    position: fixed;
+    left: 20px;
+    top: 60px; 
+    bottom:20px;
+  }
+
+
   .flashcard-container {
     width: 400px;
     height: 250px;
