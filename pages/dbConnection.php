@@ -11,11 +11,11 @@
 
     if ($connection)
     {
-        echo "you are connected!";
+   //     echo "you are connected!";
     }
 
     else{
-        echo "You are not connected.";
+    //    echo "You are not connected.";
     }
 
 

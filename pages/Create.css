@@ -7,8 +7,8 @@ form#question-form {
 body {
     margin: 0;
     padding: 0;
-    color: 457776 ;
-    background: #f4f4f4;
+    color: #457776 ;
+    background: #9bb3b5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
     display: flex;
@@ -90,7 +90,7 @@ body {
 
     padding: 12px 20px;
     background-color: #457776 ;
-    color: b6b37e;
+    color: #b6b37e;
     border: none;
     border-radius: 10px;
     cursor: pointer;

@@ -1,0 +1,84 @@
+
+ body {
+            margin: 0;
+            padding: 0;
+            color: #457776;
+            background-color: #9bb3b5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            box-sizing: border-box;
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-form input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-form button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            background-color: #457776;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #2d3f3d;
+        }
+
+        .set-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 80%;
+            max-width: 900px;
+        }
+
+        .set-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .set-title {
+            font-size: 1.2rem;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .set-title:hover {
+            color: #457776;
+        }
+
+        .set-meta {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .set-desc {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 5px;
+        }
