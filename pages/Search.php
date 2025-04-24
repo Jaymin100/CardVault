@@ -66,22 +66,24 @@ if ($query !== '') {
     <?php else: ?>
         <h2><?= $total ?> set<?= $total === 1 ? '' : 's' ?> found</h2>
 
-        <!-- List of Search Results -->
-        <ul class="set-list">
-    <?php foreach ($sets as $set): ?>
-        <li class="set-item">
-            <a class="set-title" href="view.php?set_id=<?= $set['set_ID'] ?>">
-                <?= htmlspecialchars($set['set_name'], ENT_QUOTES) ?>
-            </a>
-            <div class="set-meta">
-                by <?= htmlspecialchars($set['username'], ENT_QUOTES) ?>
-            </div>
-            <div class="set-desc">
-                Tags: <?= htmlspecialchars($set['filter_1'] . ', ' . $set['filter_2'] . ', ' . $set['filter_3'], ENT_QUOTES) ?>
-            </div>
-        </li>
-    <?php endforeach; ?>
-</ul>
+        <!-- Displaying Search Results as Notecards -->
+        <div class="notecard-wrapper">
+            <?php foreach ($sets as $set): ?>
+                <div class="notecard">
+                    <a href="View.php?set_id=<?= $set['set_ID'] ?>" class="notecard-link">
+                        <div class="notecard-header">
+                            <h3 class="notecard-title"><?= htmlspecialchars($set['set_name'], ENT_QUOTES) ?></h3>
+                            <p class="notecard-author">by <?= htmlspecialchars($set['username'], ENT_QUOTES) ?></p>
+                        </div>
+                        <div class="notecard-body">
+                            <p class="notecard-tags">
+                                Tags: <?= htmlspecialchars(implode(', ', array_filter([$set['filter_1'], $set['filter_2'], $set['filter_3']])), ENT_QUOTES) ?>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
     <?php endif; ?>
 </body>
 </html>

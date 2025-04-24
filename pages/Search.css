@@ -1,5 +1,5 @@
 
- body {
+        body {
             margin: 0;
             padding: 0;
             color: #457776;
@@ -48,37 +48,66 @@
             background-color: #2d3f3d;
         }
 
-        .set-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 80%;
-            max-width: 900px;
-        }
+        /* Wrapper for all notecards */
+.notecard-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 20px;
+}
 
-        .set-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+/* Individual notecard styling */
+.notecard {
+    width: 250px;
+    padding: 20px;
+    background-color: #c9cabd;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    text-decoration: none;
+}
 
-        .set-title {
-            font-size: 1.2rem;
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
+/* Hover effect for notecards */
+.notecard:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
 
-        .set-title:hover {
-            color: #457776;
-        }
+/* Link styling inside the notecard */
+.notecard-link {
+    color: inherit;
+    text-decoration: none;
+}
 
-        .set-meta {
-            font-size: 0.9rem;
-            color: #555;
-        }
+/* Header for the notecard (set name and author) */
+.notecard-header {
+    margin-bottom: 12px;
+}
 
-        .set-desc {
-            font-size: 1rem;
-            color: #666;
-            margin-top: 5px;
-        }
+.notecard-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #457776;
+    margin-bottom: 8px;
+}
+
+.notecard-author {
+    font-size: 14px;
+    color: #457776;
+}
+
+/* Body of the notecard (tags) */
+.notecard-body {
+    font-size: 14px;
+    color: #457776;
+}
+
+.notecard-tags {
+    color: #457776;
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
