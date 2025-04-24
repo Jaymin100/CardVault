@@ -1,3 +1,15 @@
+
+<?php
+/*
+session_start();
+
+if (!isset($_SESSION['username'])) { 
+    // Not logged in, redirect to login page
+    header("Location: login.php");
+    exit();
+}*/
+?> 
+
 <nav style="background-color: #c9cabd; height: 20px; padding: 10px 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: fixed; top: 0; width: 100%; z-index: 1000; border: 2px solid black;">
   <ul style="list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center;">
     <li><a href="Create.php" style="text-decoration: none; color: #333;">Create</a></li>

@@ -2,5 +2,8 @@
 <body>
 
 Account created<br>
-Username: <?php echo $_POST["username"]; ?><br>
-Password: <?php echo $_POST["password"]; ?><br>
+Username: <?php echo $_POST["uname"] ?? 'Not provided'; ?><br>
+Password: <?php echo $_POST["pword"] ?? 'Not provided'; ?><br>
+
+</body>
+</html>

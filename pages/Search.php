@@ -1,26 +1,31 @@
 <?php
 // Include the navigation bar and database connection
 include '../navbar.php';
-require_once __DIR__ . '/dbConnection.php'; // brings in `$conn` (mysqli)
+include_once 'dbConnection.php';
 
 $query   = trim($_GET['q'] ?? '');
 $sets    = [];
 $total   = 0;
-
+$username = "1234";// replace with user logic using session
 if ($query !== '') {
     // Prepare the LIKE clause for search functionality
     $like = '%' . $query . '%';
 
     // SQL query to search for sets based on title, description, or tags
-    $sql  = "SELECT id, title, description, author_username, created_at
-             FROM notecard_sets
-             WHERE title LIKE ? OR description LIKE ? OR tags LIKE ?
-             ORDER BY created_at DESC
-             LIMIT 50";
-
+    $sql = "SELECT set_ID, set_name, username, filter_1, filter_2, filter_3 
+    FROM all_sets 
+    WHERE (priv = 0 OR username = ?)
+      AND (
+          set_name LIKE ? 
+          OR filter_1 LIKE ? 
+          OR filter_2 LIKE ? 
+          OR filter_3 LIKE ?
+      )
+    ORDER BY set_ID 
+    LIMIT 50";
     // Prepare and execute the query
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('sss', $like, $like, $like);
+    $stmt = $connection->prepare($sql);
+    $stmt->bind_param('sssss', $username, $like, $like, $like, $like);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -63,23 +68,20 @@ if ($query !== '') {
 
         <!-- List of Search Results -->
         <ul class="set-list">
-            <?php foreach ($sets as $set): ?>
-                <li class="set-item">
-                    <a class="set-title" href="set.php?id=<?= $set['id'] ?>">
-                        <?= htmlspecialchars($set['title'], ENT_QUOTES) ?>
-                    </a>
-                    <div class="set-meta">
-                        by <?= htmlspecialchars($set['author_username'], ENT_QUOTES) ?> • 
-                        <?= (new DateTime($set['created_at']))->format('M j, Y') ?>
-                    </div>
-                    <?php if ($set['description']): ?>
-                        <div class="set-desc">
-                            <?= htmlspecialchars(mb_strimwidth($set['description'], 0, 140, '…'), ENT_QUOTES) ?>
-                        </div>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+    <?php foreach ($sets as $set): ?>
+        <li class="set-item">
+            <a class="set-title" href="view.php?set_id=<?= $set['set_ID'] ?>">
+                <?= htmlspecialchars($set['set_name'], ENT_QUOTES) ?>
+            </a>
+            <div class="set-meta">
+                by <?= htmlspecialchars($set['username'], ENT_QUOTES) ?>
+            </div>
+            <div class="set-desc">
+                Tags: <?= htmlspecialchars($set['filter_1'] . ', ' . $set['filter_2'] . ', ' . $set['filter_3'], ENT_QUOTES) ?>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
     <?php endif; ?>
 </body>
 </html>

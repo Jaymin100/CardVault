@@ -3,7 +3,7 @@
     $db_server = "localhost";
     $db_user = "root";
     $db_pass = "mysql";
-    $db_name = "CardVault";
+    $db_name = "cardvault";
 
     $connection = "";
 
@@ -11,11 +11,11 @@
 
     if ($connection)
     {
-   //     echo "you are connected!";
+      // echo "you are connected!";
     }
 
     else{
-    //    echo "You are not connected.";
+     //   echo "You are not connected.";
     }
 
 

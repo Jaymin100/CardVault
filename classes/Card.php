@@ -10,6 +10,7 @@ class Card
         $this->Question = $Question;
         $this->Answer = $Answer;
     }
+   
 
     public function getQuestion()
     {

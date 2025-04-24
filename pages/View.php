@@ -2,20 +2,60 @@
 include '../navbar.php'; 
 include '../classes/Set.php';
 include '../classes/Card.php';
+include 'dbConnection.php';
 
-// Example: Create a Set object and populate it with cards (replace this with actual database logic)
+
+
+$set_ID = $_GET['set_id'] ?? null; // Get the set ID from the URL
+if (!$set_ID) {
+  echo "<div style='color: red;'>Set ID is required.</div>";
+  exit();
+}
+
+//fethcing set from DB
+
+$set_query = "SELECT * FROM all_sets WHERE set_ID = ?";
+$stmt = $connection->prepare($set_query);
+$stmt->bind_param("i", $set_ID);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+  die("Set not found.");
+}
+
+$set_data = $result->fetch_assoc();
 $set = new Set();
-$set->setSetName("Example Set");
-$set->setSetCards([
-    new Card("What is the capital of France?", "Paris"),
-    new Card("What is 5 + 7?", "12"),
-    new Card("What color do you get when you mix red and blue?", "Purple")
-]);
+$set->setSetName($set_data['set_name']);
+$set->setSetPrivate($set_data['priv']);
+$set->setSetFilter1($set_data['filter_1']);
+$set->setSetFilter2($set_data['filter_2']);
+$set->setSetFilter3($set_data['filter_3']);
+$set->setSetUsername($set_data['username']);
+$set->setSetID($set_data['set_ID']);
+$set->setSetUserID($set_data['account_ID']);
+
+// Fetch cards from a separate table
+
+$card_query = "SELECT * FROM cards WHERE set_ID = ?";
+$card_stmt = $connection->prepare($card_query);
+$card_stmt->bind_param("i", $set_ID);
+$card_stmt->execute();
+$card_result = $card_stmt->get_result();
+
+$cards = [];
+while ($card_data = $card_result->fetch_assoc()) {
+    $card = new Card($card_data['question'],$card_data['answer']);
+
+    $cards[] = $card;
+}
+$set->setSetCards($cards);
+
 
 // Convert the cards to a JavaScript-friendly format
-$cards = [];
+$cards_js = [];
 foreach ($set->getSetCards() as $card) {
-    $cards[] = [
+    $cards_js[] = [
         'front' => $card->getQuestion(),
         'back' => $card->getAnswer()
     ];
@@ -72,7 +112,7 @@ foreach ($set->getSetCards() as $card) {
   <div class="card-counter" id="cardCounter">Card 1 of 3</div>
 </div>
 <script>
-  const cards = <?php echo json_encode($cards); ?>;
+  const cards = <?php echo json_encode($cards_js); ?>;
 
   let currentIndex = 0;
   let showingFront = true;
