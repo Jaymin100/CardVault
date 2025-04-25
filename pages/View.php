@@ -5,9 +5,7 @@ include '../classes/Set.php';
 include '../classes/Card.php';
 include 'dbConnection.php';
 
-
 // Check if the user is logged in
-//$user_id = $_SESSION['user_id'] ?? null;
 $user_id = '1234'; // Placeholder for user ID, replace with actual session logic
 if (!$user_id) {
     echo "<div style='color: red;'>You must be logged in to view your sets.</div>";
@@ -103,7 +101,6 @@ if ($set_ID) {
             <div class="arrow arrow-left" onclick="prevCard()">&#8592;</div>
 
             <div class="flashcard-container" onclick="flipCard()">
-                <!-- Add a div for the set name -->
                 <div class="card-text" id="cardText">Loading...</div>
             </div>
 
@@ -173,46 +170,62 @@ if ($set_ID) {
         $sets[] = $set;
     }
 
+    // Check if no sets are found
     if (count($sets) === 0) {
-        echo "<div>No sets found for your account.</div>";
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>No Sets Found</title>
+            <link rel="stylesheet" href="Search.css">
+        </head>
+        <body>
+            <h1 style="text-align: center;">No Flashcard Sets Found!</h1>
+            <p style="text-align: center;">It looks like you haven't created any flashcard sets yet.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="Create.php" class="button" style="text-decoration: none; padding: 10px 20px; background-color: #457776; color: #fff; border-radius: 5px;">Create Your First Set</a>
+            </div>
+        </body>
+        </html>
+        <?php
         exit();
+    } else {
+        // Display the sets as notecards
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <link rel="stylesheet" href="Search.css">
+        <head>
+            <meta charset="UTF-8">
+            <title>Your Flashcard Sets</title>
+        </head>
+        <body>
+
+        <h1>Your Flashcard Sets</h1>
+
+        <!-- Display Sets as Notecards -->
+        <div class="notecard-wrapper">
+                <?php foreach ($sets as $set): ?>
+                    <div class="notecard">
+                        <a href="View.php?set_id=<?= $set->getSetID() ?>" class="notecard-link">
+                            <div class="notecard-header">
+                                <h3 class="notecard-title"><?= htmlspecialchars($set->getSetName(), ENT_QUOTES) ?></h3>
+                                <p class="notecard-author">by <?= htmlspecialchars($set->getSetUsername(), ENT_QUOTES) ?></p>
+                            </div>
+                            <div class="notecard-body">
+                                <p class="notecard-tags">
+                                    Tags: <?= htmlspecialchars(implode(', ', array_filter([$set->getSetFilter1(), $set->getSetFilter2(), $set->getSetFilter3()])), ENT_QUOTES) ?>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+        </body>
+        </html>
+        <?php
     }
-
-    // Display the sets as notecards
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <link rel="stylesheet" href="Search.css">
-    <head>
-        <meta charset="UTF-8">
-        <title>Your Flashcard Sets</title>
-    </head>
-    <body>
-
-    <h1>Your Flashcard Sets</h1>
-
-    <!-- Display Sets as Notecards -->
-    <div class="notecard-wrapper">
-            <?php foreach ($sets as $set): ?>
-                <div class="notecard">
-                    <a href="View.php?set_id=<?= $set->getSetID() ?>" class="notecard-link">
-                        <div class="notecard-header">
-                            <h3 class="notecard-title"><?= htmlspecialchars($set->getSetName(), ENT_QUOTES) ?></h3>
-                            <p class="notecard-author">by <?= htmlspecialchars($set->getSetUsername(), ENT_QUOTES) ?></p>
-                        </div>
-                        <div class="notecard-body">
-                            <p class="notecard-tags">
-                                Tags: <?= htmlspecialchars(implode(', ', array_filter([$set->getSetFilter1(), $set->getSetFilter2(), $set->getSetFilter3()])), ENT_QUOTES) ?>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-    </body>
-    </html>
-    <?php
 }
 ?>
-
