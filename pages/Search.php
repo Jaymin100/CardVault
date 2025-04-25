@@ -6,7 +6,8 @@ include_once 'dbConnection.php';
 $query   = trim($_GET['q'] ?? '');
 $sets    = [];
 $total   = 0;
-$username = "1234";// replace with user logic using session
+$user = unserialize($_SESSION['user']);
+$username = $user->getUser(); // Assuming you have a method to get the user ID
 if ($query !== '') {
     // Prepare the LIKE clause for search functionality
     $like = '%' . $query . '%';

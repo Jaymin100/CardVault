@@ -2,15 +2,18 @@
 include 'dbConnection.php';
 include '../classes/Set.php';
 include '../classes/Card.php';
-
+include '../navbar.php';
 // Get and sanitize basic form data
 $private   = isset($_POST['pri_pub']) && $_POST['pri_pub'] === 'true';
 $filter1   = $_POST['Filter1'] ?? '';
 $filter2   = $_POST['Filter2'] ?? '';
 $filter3   = $_POST['Filter3'] ?? '';
 $set_name  = $_POST['set_name'] ?? '';
-$username  = "1234";  // Replace with session username
-$user_id   = 1234;    // Replace with session user ID
+
+
+$user = unserialize($_SESSION['user']);
+$user_id = $user->getAccountID(); // Assuming you have a method to get the user ID
+$username = $user->getUser(); // Assuming you have a method to get the user ID
 
 $cards = [];
 

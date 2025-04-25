@@ -1,12 +1,13 @@
 <?php
-session_start();
 include '../navbar.php';
 include '../classes/Set.php';
 include '../classes/Card.php';
 include 'dbConnection.php';
 
 // Placeholder for login check (replace with actual logic)
-$user_id = '1234';
+$user = unserialize($_SESSION['user']);
+$user_id = $user->getAccountID(); // Assuming you have a method to get the user ID
+//$user_id = '1234';
 if (!$user_id) {
     echo "<div style='color: red;'>You must be logged in to view your sets.</div>";
     exit();
@@ -51,9 +52,6 @@ if ($set_ID) {
         <meta charset="UTF-8">
         <title><?= htmlspecialchars($set->getSetName()) ?></title>
         <link rel="stylesheet" href="Search.css">
-        <style>
-           
-        </style>
     </head>
     <body>
 
@@ -79,66 +77,65 @@ if ($set_ID) {
         let showingFront = true;
 
         function updateCard() {
-    const card = cards[currentIndex];
-    document.getElementById('cardFront').textContent = card.front;
-    document.getElementById('cardBack').textContent = card.back;
-    document.getElementById('cardCounter').textContent = `Card ${currentIndex + 1} of ${cards.length}`;
-    
-    // Reset the flip to front first, then apply flip (delayed to ensure content is loaded)
-    setTimeout(() => {
-        document.getElementById('flashcard').classList.remove('flipped');
-        showingFront = true;
-    }, 0);
-}
+            const card = cards[currentIndex];
+            document.getElementById('cardFront').textContent = card.front;
+            document.getElementById('cardBack').textContent = card.back;
+            document.getElementById('cardCounter').textContent = `Card ${currentIndex + 1} of ${cards.length}`;
+            
+            // Reset the flip to front first, then apply flip (delayed to ensure content is loaded)
+            setTimeout(() => {
+                document.getElementById('flashcard').classList.remove('flipped');
+                showingFront = true;
+            }, 0);
+        }
 
-function flipCard() {
-    const cardEl = document.getElementById('flashcard');
-    cardEl.classList.toggle('flipped');
-    showingFront = !showingFront;
-}
+        function flipCard() {
+            const cardEl = document.getElementById('flashcard');
+            cardEl.classList.toggle('flipped');
+            showingFront = !showingFront;
+        }
 
-function prevCard() {
-    // First flip the current card to front if it's showing the back
-    if (!showingFront) {
-        const cardEl = document.getElementById('flashcard');
-        cardEl.classList.toggle('flipped');
-        showingFront = true;
-        
-        // Wait for the flip to complete before going to the previous card
-        setTimeout(() => {
-            // Update the card index after the flip is complete
-            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-            updateCard();
-        }, 100);  // Adjust delay based on your flip animation duration
-    } else {
-        // If the card is already showing the front, just go to the previous card
-        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+        function prevCard() {
+            // First flip the current card to front if it's showing the back
+            if (!showingFront) {
+                const cardEl = document.getElementById('flashcard');
+                cardEl.classList.toggle('flipped');
+                showingFront = true;
+                
+                // Wait for the flip to complete before going to the previous card
+                setTimeout(() => {
+                    // Update the card index after the flip is complete
+                    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                    updateCard();
+                }, 100);  // Adjust delay based on your flip animation duration
+            } else {
+                // If the card is already showing the front, just go to the previous card
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                updateCard();
+            }
+        }
+
+        function nextCard() {
+            // First flip the current card to front
+            if (!showingFront) {
+                const cardEl = document.getElementById('flashcard');
+                cardEl.classList.toggle('flipped');
+                showingFront = true;
+                
+                // Wait for the flip to complete before going to the next card
+                setTimeout(() => {
+                    // Update the card index after the flip is complete
+                    currentIndex = (currentIndex + 1) % cards.length;
+                    updateCard();
+                }, 100);  // Adjust delay based on your flip animation duration
+            } else {
+                // If the card is already showing the front, just go to the next card
+                currentIndex = (currentIndex + 1) % cards.length;
+                updateCard();
+            }
+        }
+
         updateCard();
-    }
-}
-
-function nextCard() {
-    // First flip the current card to front
-    if (!showingFront) {
-        const cardEl = document.getElementById('flashcard');
-        cardEl.classList.toggle('flipped');
-        showingFront = true;
-        
-        // Wait for the flip to complete before going to the next card
-        setTimeout(() => {
-            // Update the card index after the flip is complete
-            currentIndex = (currentIndex + 1) % cards.length;
-            updateCard();
-        }, 100);  // Adjust delay based on your flip animation duration
-    } else {
-        // If the card is already showing the front, just go to the next card
-        currentIndex = (currentIndex + 1) % cards.length;
-        updateCard();
-    }
-}
-
-updateCard();
-
     </script>
     </body>
     </html>
@@ -156,9 +153,24 @@ updateCard();
     }
 
     if (empty($sets)) {
-        echo "<h1 style='text-align:center;'>No Flashcard Sets Found</h1>";
-        echo "<p style='text-align:center;'>You haven't created any sets yet.</p>";
-        echo "<div style='text-align:center; margin-top:20px;'><a href='Create.php' style='text-decoration:none; background-color:#457776; color:white; padding:10px 20px; border-radius:5px;'>Create One Now</a></div>";
+        // Display no sets message with link to create new set
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Your Flashcard Sets</title>
+            <link rel="stylesheet" href="Search.css">
+        </head>
+        <body>
+            <h1 style="text-align:center;">No Flashcard Sets Found</h1>
+            <p style="text-align:center;">You haven't created any sets yet.</p>
+            <div style="text-align:center; margin-top:20px;">
+                <a href="Create.php" style="text-decoration:none; background-color:#457776; color:white; padding:10px 20px; border-radius:5px;">Create One Now</a>
+            </div>
+        </body>
+        </html>
+        <?php
         exit();
     }
     ?>
