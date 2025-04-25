@@ -4,6 +4,7 @@ form#question-form {
     padding: 0;        /* Remove any default padding */
     display: block;    /* Ensure the form is a block-level element */
   }
+
 body {
     margin: 0;
     padding: 0;
@@ -18,6 +19,7 @@ body {
     box-sizing: border-box;
   }
 .create-bar-container {
+
     border-radius: 20px;
     background: #c9cabd;
     display: flex;
@@ -29,6 +31,7 @@ body {
     top: 60px; 
     bottom:20px;
     display: flex; 
+    border:#457776 solid 4px;
     flex-direction: column;
     gap: 20px;
   }
@@ -45,6 +48,7 @@ body {
     top: 60px;
     left: 240px;
     box-sizing: border-box;
+    border:#457776 solid 4px;
     overflow-y: auto; /* scroll if content overflows */
   }
   .large-input{
@@ -58,14 +62,28 @@ body {
     min-height: 100px;
     white-space: initial;
     resize: none;
+    background-color: #b6b37e;
     text-align: center;
   
   }
   .top-input {
-    text-align:center;
+
     width: 30%;
-    max-width: 400px; /* smaller width */
-    margin-bottom: 20px;
+    border: 3px solid #457776;
+    border-radius: 10px;
+    height: 50px;
+    text-align: center;
+    font-size: 20px;
+      
+  }
+  .filter-input{
+    width: 80%;
+    font-size: 1rem;
+    border: 3px solid #457776;
+    border-radius: 10px;
+    height: 30px;
+    text-align: center;
+
   }
   .filter-text{
     text-align: center;
@@ -74,18 +92,23 @@ body {
   .top-text{
     text-align:center;
   }
-  
+
+
   .grid-inputs {
+    width: 100%; /* or a specific width */
     display: grid;
-    grid-template-columns: 20px 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-  }
-  .grid-inputs input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-  }
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.card {
+  background-color: #457776 ;
+  color: #b6b37e;
+  border: 1px solid #ccc;
+  padding: 1em;
+  margin-bottom: 1em;
+  cursor: move;
+  border-radius: 8px;
+}
   .button {
 
     padding: 12px 20px;
@@ -95,8 +118,39 @@ body {
     border-radius: 10px;
     cursor: pointer;
   }
+
+.button:hover {
+    background-color: #b6b37e; /* Change background color on hover */
+    color: #457776; /* Change text color on hover */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
   .set-name-wrapper {
     text-align: center;
     margin: 20px auto;
     width: 100%;
   }
+  .card-container {
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    padding: 1em;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.delete-button {
+    margin-top: 0.5em;
+    background-color: #457776 ;
+    color: #b6b37e;
+    border: 2px solid #b6b37e;
+    padding: 0.4em 0.8em;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-button:hover {
+    background-color: #b6b37e; /* Change background color on hover */
+    color: #457776; /* Change text color on hover */
+    border-color: #457776; /* Change border color on hover */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+}
