@@ -36,7 +36,7 @@
         <div class="top-text">
         <button class="button" for="SetCard">Set Card Count</button>
         <input type="text" id="SetCard" name="SetCard"  style="width: 50px;"class="filter-input"><br>
-        <label>There can only be a max of 200 cards in a set and changing count erases all cards!</label><br>
+        <label>Max of 200 Cards. setting the count erases current cards!</label><br>
         <button class="button" for="AddCard" style="margin-bottom: -10px ;">Add card</button>
     
         
