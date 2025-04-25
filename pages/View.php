@@ -1,24 +1,22 @@
 <?php
-session_start(); // Ensure you start the session to access the user info
-include '../navbar.php'; 
+session_start();
+include '../navbar.php';
 include '../classes/Set.php';
 include '../classes/Card.php';
 include 'dbConnection.php';
 
-// Check if the user is logged in
-$user_id = '1234'; // Placeholder for user ID, replace with actual session logic
+// Placeholder for login check (replace with actual logic)
+$user_id = '1234';
 if (!$user_id) {
     echo "<div style='color: red;'>You must be logged in to view your sets.</div>";
     exit();
 }
 
-// Check if a specific set_id is passed in the URL
 $set_ID = $_GET['set_id'] ?? null;
 
 if ($set_ID) {
-    // Fetch the specific set from the database if set_id is provided
-    $set_query = "SELECT * FROM all_sets WHERE set_ID = ? AND account_ID = ?";
-    $stmt = $connection->prepare($set_query);
+    // View a specific flashcard set
+    $stmt = $connection->prepare("SELECT * FROM all_sets WHERE set_ID = ? AND account_ID = ?");
     $stmt->bind_param("ii", $set_ID, $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -31,201 +29,167 @@ if ($set_ID) {
     $set_data = $result->fetch_assoc();
     $set = new Set();
     $set->setSetName($set_data['set_name']);
-    $set->setSetPrivate($set_data['priv']);
-    $set->setSetFilter1($set_data['filter_1']);
-    $set->setSetFilter2($set_data['filter_2']);
-    $set->setSetFilter3($set_data['filter_3']);
-    $set->setSetUsername($set_data['username']);
     $set->setSetID($set_data['set_ID']);
     $set->setSetUserID($set_data['account_ID']);
 
-    // Fetch cards for this specific set
-    $card_query = "SELECT * FROM cards WHERE set_ID = ?";
-    $card_stmt = $connection->prepare($card_query);
+    $card_stmt = $connection->prepare("SELECT * FROM cards WHERE set_ID = ?");
     $card_stmt->bind_param("i", $set_ID);
     $card_stmt->execute();
     $card_result = $card_stmt->get_result();
 
     $cards = [];
     while ($card_data = $card_result->fetch_assoc()) {
-        $card = new Card($card_data['question'], $card_data['answer']);
-        $cards[] = $card;
-    }
-    $set->setSetCards($cards);
-
-    // Convert the cards to a JavaScript-friendly format
-    $cards_js = [];
-    foreach ($set->getSetCards() as $card) {
-        $cards_js[] = [
-            'front' => $card->getQuestion(),
-            'back' => $card->getAnswer()
+        $cards[] = [
+            'front' => $card_data['question'],
+            'back' => $card_data['answer']
         ];
     }
-
-    // Display the set's flashcards
     ?>
     <!DOCTYPE html>
     <html lang="en">
-    <link rel="stylesheet" href="Styles.css">
     <head>
         <meta charset="UTF-8">
-        <title>Flashcard Viewer</title>
+        <title><?= htmlspecialchars($set->getSetName()) ?></title>
+        <link rel="stylesheet" href="Search.css">
         <style>
-            .card-wrapper {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                margin-top: 0px;
-            }
-
-            .flashcard-navigation {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .set-name {
-                font-size: 20px;
-                font-weight: bold;
-                margin-bottom: 10px;
-                text-align: center;
-            }
+           
         </style>
     </head>
     <body>
 
     <div class="card-wrapper">
-        <div class="set-name" id="setName"><?php echo htmlspecialchars($set->getSetName()); ?></div>
+        <div class="set-name"><?= htmlspecialchars($set->getSetName()) ?></div>
         <div class="flashcard-navigation">
-            <div class="arrow arrow-left" onclick="prevCard()">&#8592;</div>
+            <div class="arrow" onclick="prevCard()">&#8592;</div>
 
-            <div class="flashcard-container" onclick="flipCard()">
-                <div class="card-text" id="cardText">Loading...</div>
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="front" id="cardFront">Loading...</div>
+                <div class="back" id="cardBack">Loading...</div>
             </div>
 
-            <div class="arrow arrow-right" onclick="nextCard()">&#8594;</div>
+            <div class="arrow" onclick="nextCard()">&#8594;</div>
         </div>
 
-        <div class="card-counter" id="cardCounter">Card 1 of 3</div>
+        <div class="card-counter" id="cardCounter">Card 1 of <?= count($cards) ?></div>
     </div>
 
     <script>
-        const cards = <?php echo json_encode($cards_js); ?>;
-
+        const cards = <?= json_encode($cards) ?>;
         let currentIndex = 0;
         let showingFront = true;
 
         function updateCard() {
-            const card = cards[currentIndex];
-            document.getElementById('cardText').textContent = showingFront ? card.front : card.back;
+    const card = cards[currentIndex];
+    document.getElementById('cardFront').textContent = card.front;
+    document.getElementById('cardBack').textContent = card.back;
+    document.getElementById('cardCounter').textContent = `Card ${currentIndex + 1} of ${cards.length}`;
+    
+    // Reset the flip to front first, then apply flip (delayed to ensure content is loaded)
+    setTimeout(() => {
+        document.getElementById('flashcard').classList.remove('flipped');
+        showingFront = true;
+    }, 0);
+}
 
-            // Update the card counter
-            document.getElementById('cardCounter').textContent = `Card ${currentIndex + 1} of ${cards.length}`;
-        }
+function flipCard() {
+    const cardEl = document.getElementById('flashcard');
+    cardEl.classList.toggle('flipped');
+    showingFront = !showingFront;
+}
 
-        function flipCard() {
-            showingFront = !showingFront;
-            updateCard();
-        }
-
-        function prevCard() {
+function prevCard() {
+    // First flip the current card to front if it's showing the back
+    if (!showingFront) {
+        const cardEl = document.getElementById('flashcard');
+        cardEl.classList.toggle('flipped');
+        showingFront = true;
+        
+        // Wait for the flip to complete before going to the previous card
+        setTimeout(() => {
+            // Update the card index after the flip is complete
             currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-            showingFront = true;
             updateCard();
-        }
-
-        function nextCard() {
-            currentIndex = (currentIndex + 1) % cards.length;
-            showingFront = true;
-            updateCard();
-        }
-
-        // Initialize
+        }, 100);  // Adjust delay based on your flip animation duration
+    } else {
+        // If the card is already showing the front, just go to the previous card
+        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
         updateCard();
+    }
+}
+
+function nextCard() {
+    // First flip the current card to front
+    if (!showingFront) {
+        const cardEl = document.getElementById('flashcard');
+        cardEl.classList.toggle('flipped');
+        showingFront = true;
+        
+        // Wait for the flip to complete before going to the next card
+        setTimeout(() => {
+            // Update the card index after the flip is complete
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCard();
+        }, 100);  // Adjust delay based on your flip animation duration
+    } else {
+        // If the card is already showing the front, just go to the next card
+        currentIndex = (currentIndex + 1) % cards.length;
+        updateCard();
+    }
+}
+
+updateCard();
+
     </script>
     </body>
     </html>
     <?php
 } else {
-    // Fetch all sets created by the logged-in user if no set_id is provided
-    $set_query = "SELECT * FROM all_sets WHERE account_ID = ?";
-    $stmt = $connection->prepare($set_query);
+    // Show all sets for the user
+    $stmt = $connection->prepare("SELECT * FROM all_sets WHERE account_ID = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     $sets = [];
-    while ($set_data = $result->fetch_assoc()) {
-        $set = new Set();
-        $set->setSetName($set_data['set_name']);
-        $set->setSetPrivate($set_data['priv']);
-        $set->setSetFilter1($set_data['filter_1']);
-        $set->setSetFilter2($set_data['filter_2']);
-        $set->setSetFilter3($set_data['filter_3']);
-        $set->setSetUsername($set_data['username']);
-        $set->setSetID($set_data['set_ID']);
-        $set->setSetUserID($set_data['account_ID']);
-
-        $sets[] = $set;
+    while ($row = $result->fetch_assoc()) {
+        $sets[] = $row;
     }
 
-    // Check if no sets are found
-    if (count($sets) === 0) {
-        ?>
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>No Sets Found</title>
-            <link rel="stylesheet" href="Search.css">
-        </head>
-        <body>
-            <h1 style="text-align: center;">No Flashcard Sets Found!</h1>
-            <p style="text-align: center;">It looks like you haven't created any flashcard sets yet.</p>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="Create.php" class="button" style="text-decoration: none; padding: 10px 20px; background-color: #457776; color: #fff; border-radius: 5px;">Create Your First Set</a>
-            </div>
-        </body>
-        </html>
-        <?php
+    if (empty($sets)) {
+        echo "<h1 style='text-align:center;'>No Flashcard Sets Found</h1>";
+        echo "<p style='text-align:center;'>You haven't created any sets yet.</p>";
+        echo "<div style='text-align:center; margin-top:20px;'><a href='Create.php' style='text-decoration:none; background-color:#457776; color:white; padding:10px 20px; border-radius:5px;'>Create One Now</a></div>";
         exit();
-    } else {
-        // Display the sets as notecards
-        ?>
-        <!DOCTYPE html>
-        <html lang="en">
-        <link rel="stylesheet" href="Search.css">
-        <head>
-            <meta charset="UTF-8">
-            <title>Your Flashcard Sets</title>
-        </head>
-        <body>
-
-        <h1>Your Flashcard Sets</h1>
-
-        <!-- Display Sets as Notecards -->
-        <div class="notecard-wrapper">
-                <?php foreach ($sets as $set): ?>
-                    <div class="notecard">
-                        <a href="View.php?set_id=<?= $set->getSetID() ?>" class="notecard-link">
-                            <div class="notecard-header">
-                                <h3 class="notecard-title"><?= htmlspecialchars($set->getSetName(), ENT_QUOTES) ?></h3>
-                                <p class="notecard-author">by <?= htmlspecialchars($set->getSetUsername(), ENT_QUOTES) ?></p>
-                            </div>
-                            <div class="notecard-body">
-                                <p class="notecard-tags">
-                                    Tags: <?= htmlspecialchars(implode(', ', array_filter([$set->getSetFilter1(), $set->getSetFilter2(), $set->getSetFilter3()])), ENT_QUOTES) ?>
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-        </body>
-        </html>
-        <?php
     }
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Your Flashcard Sets</title>
+        <link rel="stylesheet" href="Search.css">
+    </head>
+    <body>
+        <h1 style="text-align:center;">Your Flashcard Sets</h1>
+        <div class="notecard-wrapper">
+            <?php foreach ($sets as $set): ?>
+                <div class="notecard">
+                    <a href="View.php?set_id=<?= $set['set_ID'] ?>" class="notecard-link">
+                        <div class="notecard-header">
+                            <h3 class="notecard-title"><?= htmlspecialchars($set['set_name']) ?></h3>
+                            <p class="notecard-author">by <?= htmlspecialchars($set['username']) ?></p>
+                        </div>
+                        <div class="notecard-body">
+                            <p class="notecard-tags">
+                                Tags: <?= htmlspecialchars(implode(', ', array_filter([$set['filter_1'], $set['filter_2'], $set['filter_3']]))) ?>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </body>
+    </html>
+    <?php
 }
 ?>
