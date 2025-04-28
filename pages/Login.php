@@ -35,12 +35,12 @@ session_start();
           <label for="pword" class="notecard-author">Password:</label><br>
           <input type="password" id="pword" name="pword" required>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" class="button1">Login</button>
       </form>
     </div>
   </div>
   <div style="text-align:center;">
-    <p>Don't have an account?</p><br>
-    <button class="button1""><a href="index.php" style="text-decoration:none; color:white;">Back to Home</a></button>
+    <p>Click Down here to register!</p><br>
+    <button class="button1""><a href="CreateAccount.php" style="text-decoration:none; color:white;">Register</a></button>
 </body>
 </html>

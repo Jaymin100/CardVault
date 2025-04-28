@@ -49,7 +49,14 @@ if ($query !== '') {
 
     <!-- Search Form -->
     <form class="search-form" method="get" action="search.php">
-        <input 
+        <input
+            style="    width: 80%;
+    font-size: 1rem;
+    border: 3px solid #457776;
+    border-radius: 10px;
+    height: 50px;
+    text-align: center;
+" 
             type="text" 
             name="q" 
             placeholder="Search sets…" 

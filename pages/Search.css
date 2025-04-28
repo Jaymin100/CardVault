@@ -167,6 +167,10 @@
 }
 
 .flashcard .back {
+
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
     color:c9cabd;
     border: #c9cabd solid 2px;  
     background-color: #457776;
