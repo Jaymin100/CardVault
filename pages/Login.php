@@ -10,6 +10,12 @@ session_start();
 </head>
 <style>
 
+body {
+  background-image: url('../login_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
  .button1{
             font-size: 1rem;
             background-color: #457776;

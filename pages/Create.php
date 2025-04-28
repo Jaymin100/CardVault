@@ -3,6 +3,13 @@
     <!DOCTYPE html>
     <html lang="en">
     <head>
+    <style>
+body {
+  background-image: url('../create_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+</style>
         
     <meta charset="UTF-8">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>

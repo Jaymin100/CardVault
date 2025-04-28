@@ -7,7 +7,7 @@ include 'dbConnection.php';
 // Placeholder for login check (replace with actual logic)
 $user = unserialize($_SESSION['user']);
 $user_id = $user->getAccountID(); // Assuming you have a method to get the user ID
-//$user_id = '1234';
+
 if (!$user_id) {
     echo "<div style='color: red;'>You must be logged in to view your sets.</div>";
     exit();
@@ -16,14 +16,14 @@ if (!$user_id) {
 $set_ID = $_GET['set_id'] ?? null;
 
 if ($set_ID) {
-    // View a specific flashcard set
-    $stmt = $connection->prepare("SELECT * FROM all_sets WHERE set_ID = ? AND account_ID = ?");
+    // View a specific flashcard set (both public and private sets)
+    $stmt = $connection->prepare("SELECT * FROM all_sets WHERE set_ID = ? AND (account_ID = ? OR priv = '0')");
     $stmt->bind_param("ii", $set_ID, $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows === 0) {
-        echo "<div style='color: red;'>Set not found or not created by you.</div>";
+        echo "<div style='color: red;'>Set not found or not accessible.</div>";
         exit();
     }
 
@@ -48,6 +48,13 @@ if ($set_ID) {
     ?>
     <!DOCTYPE html>
     <html lang="en">
+    <style>
+body {
+  background-image: url('../create_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+</style>
     <head>
         <meta charset="UTF-8">
         <title><?= htmlspecialchars($set->getSetName()) ?></title>
@@ -141,8 +148,8 @@ if ($set_ID) {
     </html>
     <?php
 } else {
-    // Show all sets for the user
-    $stmt = $connection->prepare("SELECT * FROM all_sets WHERE account_ID = ?");
+    // Show all sets for the user (including public sets)
+    $stmt = $connection->prepare("SELECT * FROM all_sets WHERE account_ID = ? ");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -157,7 +164,15 @@ if ($set_ID) {
         ?>
         <!DOCTYPE html>
         <html lang="en">
+        <style>
+body {
+  background-image: url('../create_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+</style>
         <head>
+            
             <meta charset="UTF-8">
             <title>Your Flashcard Sets</title>
             <link rel="stylesheet" href="Search.css">
@@ -176,6 +191,13 @@ if ($set_ID) {
     ?>
     <!DOCTYPE html>
     <html lang="en">
+    <style>
+body {
+  background-image: url('../create_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+</style>
     <head>
         <meta charset="UTF-8">
         <title>Your Flashcard Sets</title>

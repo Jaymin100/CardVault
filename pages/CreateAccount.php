@@ -9,15 +9,22 @@ if (session_status() === PHP_SESSION_NONE) {
   <title>Create Account</title>
   <link rel="stylesheet" href="Search.css" />
   <style>
-    .button1 {
-      font-size: 1rem;
-      background-color: #457776;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 10px;
-    }
+
+body {
+  background-image: url('../login_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+ .button1{
+            font-size: 1rem;
+            background-color: #457776;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+ }
+
     input[type="text"], input[type="password"] {
       width: 90%;
       padding: 8px;

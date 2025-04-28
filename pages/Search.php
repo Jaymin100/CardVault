@@ -40,6 +40,13 @@ if ($query !== '') {
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="Search.css" />
+<style>
+body {
+  background-image: url('../create_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+</style>
 <head>
     <meta charset="UTF-8" />
     <title>Search | CardVault</title>
