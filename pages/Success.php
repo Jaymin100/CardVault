@@ -35,7 +35,7 @@ $card_count = $card_result->fetch_assoc()['total'];
 <head>
     <meta charset="UTF-8">
     <title>Set Created</title>
-    <link rel="stylesheet" href="Search.css"> <!-- Reuse your notecard CSS -->
+    <link rel="stylesheet" href="Search.css">
 </head>
 <body>
     <h1 style="text-align:center;">🎉 Set Created Successfully</h1>

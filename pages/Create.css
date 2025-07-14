@@ -1,10 +1,9 @@
 form#question-form {
-    width: 100%;       /* Make the form take up the entire width */
-    margin: 0;         /* Remove any default margin */
-    padding: 0;        /* Remove any default padding */
-    display: block;    /* Ensure the form is a block-level element */
-  }
-
+    width: 100%;     
+    margin: 0; 
+    padding: 0; 
+    display: block;   
+}
 body {
     margin: 0;
     padding: 0;
@@ -15,7 +14,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 60px; /* If you have a fixed navbar */
+    padding-top: 60px; 
     box-sizing: border-box;
     
   }
@@ -50,16 +49,16 @@ body {
     left: 240px;
     box-sizing: border-box;
     border:#457776 solid 4px;
-    overflow-y: auto; /* scroll if content overflows */
+    overflow-y: auto; 
   }
   .large-input{
-    width: 100%;       /* Set to full container width */
-    padding: 10px;     /* Add some padding for better spacing */
-    margin: 5px 0;     /* Space between inputs */
-    font-size: 16px;   /* Larger text inside inputs */
-    border: 1px solid #ccc;  /* Add a border for better visibility */
-    border-radius: 4px;  /* Rounded corners */
-    box-sizing: border-box;  /* Ensure padding is included in the width calculation */
+    width: 100%;       
+    padding: 10px;    
+    margin: 5px 0;    
+    font-size: 16px;   
+    border: 1px solid #ccc; 
+    border-radius: 4px;  
+    box-sizing: border-box; 
     min-height: 100px;
     white-space: initial;
     resize: none;
@@ -96,7 +95,7 @@ body {
 
 
   .grid-inputs {
-    width: 100%; /* or a specific width */
+    width: 100%; 
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -121,9 +120,9 @@ body {
   }
 
 .button:hover {
-    background-color: #b6b37e; /* Change background color on hover */
-    color: #457776; /* Change text color on hover */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    background-color: #b6b37e;
+    color: #457776; 
+    transition: background-color 0.3s ease, color 0.3s ease; 
 }
 
   .set-name-wrapper {
@@ -150,8 +149,8 @@ body {
 }
 
 .delete-button:hover {
-    background-color: #b6b37e; /* Change background color on hover */
-    color: #457776; /* Change text color on hover */
-    border-color: #457776; /* Change border color on hover */
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+    background-color: #b6b37e;
+    color: #457776; 
+    border-color: #457776; 
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; 
 }

@@ -47,6 +47,6 @@ body {
   </div>
   <div style="text-align:center;">
     <p>Click Down here to register!</p><br>
-    <button class="button1""><a href="CreateAccount.php" style="text-decoration:none; color:white;">Register</a></button>
+    <button class="button1"><a href="CreateAccount.php" style="text-decoration:none; color:white;">Register</a></button>
 </body>
 </html>

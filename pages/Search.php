@@ -1,5 +1,4 @@
 <?php
-// Include the navigation bar and database connection
 include '../navbar.php';
 include_once 'dbConnection.php';
 
@@ -7,7 +6,7 @@ $query   = trim($_GET['q'] ?? '');
 $sets    = [];
 $total   = 0;
 $user = unserialize($_SESSION['user']);
-$username = $user->getUser(); // Assuming you have a method to get the user ID
+$username = $user->getUser(); 
 if ($query !== '') {
     // Prepare the LIKE clause for search functionality
     $like = '%' . $query . '%';
