@@ -1,5 +1,21 @@
 <?php
 session_start();
+include 'csrf.php';
+
+$max_attempts = 5;
+$lockout_time = 15*60 ;// 15 mins
+
+if(!isset($_SESSION['login_attempts'])){
+$_SESSION['login_attempts'] = 0;
+$_SESSION['last_attempt_time'] = time();
+}
+if($_SESSION['login_attempts'] >= $max_attempts && (time()-$_SESSION['last_attempt_time']) < $lockout_time)
+
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +57,7 @@ body {
           <label for="pword" class="notecard-author">Password:</label><br>
           <input type="password" id="pword" name="pword" required>
         </div>
+        <?= csrf_input_field() ?>
         <button type="submit" class="button1">Login</button>
       </form>
     </div>

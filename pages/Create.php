@@ -1,4 +1,10 @@
-    <?php include '../navbar.php'; ?>
+    <?php  
+include 'session_security.php';
+include '../navbar.php';
+include 'csrf.php'
+?>
+
+
     
     <!DOCTYPE html>
     <html lang="en">
@@ -19,6 +25,7 @@ body {
     </head>
     <body>
     <form id="question-form" action="test.php" method="POST">
+    <?= csrf_input_field() ?>
     <div class="create-bar-container">
         <div class="top-text">
             <input type="radio" id="public" name="pri_pub" value="false">
@@ -168,7 +175,7 @@ body {
 
             </div>
 
-            <!-- Add Submit Button to upload data -->
+
         </form>
     </div>
 

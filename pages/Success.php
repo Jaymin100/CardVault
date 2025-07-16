@@ -1,4 +1,11 @@
 <?php
+include 'session_security.php';
+// Check if user is logged in
+if (!isset($_SESSION['user'])) {
+    header("Location: Login.php");
+    exit();
+}
+
 include 'dbConnection.php';
 include '../navbar.php';
 

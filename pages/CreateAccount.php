@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include 'crfs.php'
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,6 +42,7 @@ body {
     <div class="notecard" style="width: 300px; text-align: center; border:3px #457776 solid;">
       <h1 class="notecard-title">Register</h1>
       <form action="CreateAccountHandler.php" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+      <?= csrf_input_field() ?>
         <div>
           <label for="uname" class="notecard-author">Username (8-16 characters):</label><br>
           <input type="text" id="uname" name="uname" required>

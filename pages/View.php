@@ -1,4 +1,24 @@
 <?php
+// --- SESSION SECURITY SETUP ---
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '', // or your domain
+    'secure' => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+session_start();
+
+$timeout_duration = 1800; // 30 minutes
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
+    session_unset();
+    session_destroy();
+    header("Location: Login.php?timeout=1");
+    exit();
+}
+$_SESSION['LAST_ACTIVITY'] = time();
+// --- END SESSION SECURITY SETUP ---
 include '../navbar.php';
 include '../classes/Set.php';
 include '../classes/Card.php';
@@ -57,13 +77,13 @@ body {
 </style>
     <head>
         <meta charset="UTF-8">
-        <title><?= htmlspecialchars($set->getSetName()) ?></title>
+        <title><?= htmlspecialchars($set->getSetName(), ENT_QUOTES) ?></title>
         <link rel="stylesheet" href="Search.css">
     </head>
     <body>
 
     <div class="card-wrapper">
-        <div class="set-name"><?= htmlspecialchars($set->getSetName()) ?></div>
+        <div class="set-name"><?= htmlspecialchars($set->getSetName(), ENT_QUOTES) ?></div>
         <div class="flashcard-navigation">
             <div class="arrow" onclick="prevCard()">&#8592;</div>
 
@@ -210,12 +230,12 @@ body {
                 <div class="notecard">
                     <a href="View.php?set_id=<?= $set['set_ID'] ?>" class="notecard-link">
                         <div class="notecard-header">
-                            <h3 class="notecard-title"><?= htmlspecialchars($set['set_name']) ?></h3>
-                            <p class="notecard-author">by <?= htmlspecialchars($set['username']) ?></p>
+                            <h3 class="notecard-title"><?= htmlspecialchars($set['set_name'], ENT_QUOTES) ?></h3>
+                            <p class="notecard-author">by <?= htmlspecialchars($set['username'], ENT_QUOTES) ?></p>
                         </div>
                         <div class="notecard-body">
                             <p class="notecard-tags">
-                                Tags: <?= htmlspecialchars(implode(', ', array_filter([$set['filter_1'], $set['filter_2'], $set['filter_3']]))) ?>
+                                Tags: <?= htmlspecialchars(implode(', ', array_filter([$set['filter_1'], $set['filter_2'], $set['filter_3']])), ENT_QUOTES) ?>
                             </p>
                         </div>
                     </a>

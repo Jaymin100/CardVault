@@ -1,11 +1,21 @@
 <?php
-session_start();
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../error/app_errors.log');
+error_reporting(E_ALL);
 
-// Connect to database
-$db_server = "localhost";
-$db_user = "root";
-$db_pass = "mysql";
-$db_name = "CardVault";
+session_start();
+include 'dbConnection.php';
+include 'csrf.php';
+verify_csrf_token();
+
+$db_server = $_ENV['db_server'];
+$db_user = $_ENV["db_user"];
+$db_pass = $_ENV["db_pass"];
+$db_name = $_ENV["db_name"];
+
+
+
 $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
 if (isset($_POST['uname']) && isset($_POST['pword']) && isset($_POST['pword_re'])) {
@@ -35,25 +45,44 @@ function insert_info($uname_in, $pword_in) {
     $hashed_password = password_hash($pword_in, PASSWORD_DEFAULT);
     $query = "INSERT INTO user (username, user_password) VALUES (?, ?)";
     $stmt = $conn->prepare($query);
+    if (!$stmt) {
+        error_log("Prepare failed in CreateAccountHandler.php: " . $conn->error);
+        echo "Sorry, something went wrong. Please try again later.";
+        exit();
+    }
     $stmt->bind_param("ss", $uname_in, $hashed_password);
     $result = $stmt->execute();
 
-    if (!$result) die("Fatal Error");
+    if (!$result) {
+        error_log("Failed to insert user in CreateAccountHandler.php: " . $conn->error);
+        echo "Sorry, something went wrong. Please try again later.";
+        exit();
+    }
 }
 
 function is_in_database($uname_in): bool {
     global $conn;
-    $uname_in = $conn->real_escape_string($uname_in);
-    $query = "SELECT 1 FROM user WHERE username = '$uname_in' LIMIT 1";
-    $result = $conn->query($query);
+    $query = "SELECT 1 FROM user WHERE username = ? LIMIT 1";
+    $stmt = $conn->prepare($query);
+    if(!$stmt) {
+        error_log("Prepare failed in is_in_database: " . $conn->error);
+        echo "Sorry, something went wrong. Please try again later.";
+        exit();
+    }
+    $stmt->bind_param("s", $uname_in);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (!$result) die("Fatal error");
-
-    if ($result->num_rows > 0) {
-        $_SESSION['error_message'] = "Username already taken.";
+    if(!$result) {
+        error_log("Query failed in is_in_database: " . $conn->error);
+        echo "Sorry, something went wrong. Please try again later.";
+        exit();
     }
 
-    return $result->num_rows > 0;
+    if($result->num_rows > 0) {
+        $_SESSION['error_message'] = "Username already taken.";
+    }
+    return $result->num_rows > 0;   
 }
 
 function is_valid_uname($uname_in): bool {

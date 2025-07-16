@@ -1,4 +1,5 @@
 <?php
+include 'session_security.php';
 include '../navbar.php';
 include_once 'dbConnection.php';
 
